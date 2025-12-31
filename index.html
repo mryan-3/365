@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <title>Project 365</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="style.css">
+  <link rel="manifest" href="manifest.json">
+  <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <meta name="theme-color" content="#111111">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+</head>
+<body>
+
+  <header>
+    <h1>Due Today</h1>
+    <div class="hero-amount">
+      <span class="currency">KES</span>
+      <span id="due-amount">0</span>
+    </div>
+    <div id="hero-sub" class="hero-sub">You are all caught up!</div>
+  </header>
+
+  <main>
+    <div class="action-area">
+      <button id="btn-pay" class="btn-pay">Mark Saved</button>
+    </div>
+
+    <div class="stats">
+      <div class="stat-card">
+        <span class="stat-val" id="total-saved">0</span>
+        <span class="stat-label">Saved</span>
+      </div>
+      <div class="stat-card">
+        <span class="stat-val" id="days-completed">0/365</span>
+        <span class="stat-label">Days</span>
+      </div>
+    </div>
+
+    <div class="calendar-header">
+      <button class="month-nav" id="prev-month">&larr;</button>
+      <span class="month-title" id="month-title">January 2025</span>
+      <button class="month-nav" id="next-month">&rarr;</button>
+    </div>
+
+    <div class="calendar-grid">
+      <div class="day-header">S</div>
+      <div class="day-header">M</div>
+      <div class="day-header">T</div>
+      <div class="day-header">W</div>
+      <div class="day-header">T</div>
+      <div class="day-header">F</div>
+      <div class="day-header">S</div>
+      <!-- Days injected via JS -->
+      <div id="calendar-body" style="display: contents;"></div>
+    </div>
+  </main>
+
+  <footer>
+    <button class="link-btn" id="btn-export">Export Data</button>
+    <button class="link-btn" id="btn-reminder">Set Reminder</button>
+  </footer>
+
+  <div id="toast" class="toast">Saved!</div>
+
+  <script src="app.js"></script>
+</body>
+</html>
