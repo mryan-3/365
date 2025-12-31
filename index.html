@@ -10,6 +10,7 @@
   <link rel="stylesheet" href="style.css">
   <link rel="manifest" href="manifest.json">
   <link rel="apple-touch-icon" href="icons/icon-192.png">
+  <link rel="icon" type="image/png" href="icons/favicon.png">
   <meta name="theme-color" content="#111111">
   <meta name="apple-mobile-web-app-capable" content="yes">
 </head>
@@ -18,7 +19,7 @@
   <header>
     <h1>Due Today</h1>
     <div class="hero-amount">
-      <span class="currency">KES</span>
+      <span class="currency" id="currency-label"></span>
       <span id="due-amount">0</span>
     </div>
     <div id="hero-sub" class="hero-sub">You are all caught up!</div>
@@ -60,9 +61,22 @@
   </main>
 
   <footer>
-    <button class="link-btn" id="btn-export">Export Data</button>
-    <button class="link-btn" id="btn-reminder">Set Reminder</button>
+    <select id="currency-select" class="link-btn" style="text-align-last: center;">
+      <option class="link-btn" value="KES">KES</option>
+      <option class="link-btn" value="USD">USD</option>
+      <option class="link-btn" value="EUR">EUR</option>
+      <option class="link-btn" value="GBP">GBP</option>
+      <option class="link-btn" value="NGN">NGN</option>
+      <option class="link-btn" value="ZAR">ZAR</option>
+      <option class="link-btn" value="INR">INR</option>
+      <option class="link-btn" value="JPY">JPY</option>
+    </select>
+    <button class="link-btn" id="btn-export">Export</button>
+    <button class="link-btn" id="btn-import">Import</button>
+    <button class="link-btn" id="btn-reminder">Reminder</button>
   </footer>
+
+  <input type="file" id="file-import" style="display: none;" accept=".json">
 
   <div id="toast" class="toast">Saved!</div>
 

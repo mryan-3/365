@@ -10,7 +10,8 @@ const START_DATE = new Date(CURRENT_YEAR, 0, 1);
 
 // State object
 let state = {
-  savedDays: [] // Array of day numbers (1-366) that are marked as saved
+  savedDays: [], // Array of day numbers (1-366) that are marked as saved
+  currency: 'KES' // Default
 };
 
 // ---------------------------------------------------------
@@ -38,7 +39,15 @@ function getDateFromDayNum(dayNum) {
  * Format currency
  */
 function formatMoney(amount) {
-  return amount.toLocaleString();
+  try {
+    return new Intl.NumberFormat('en-US', { 
+      style: 'decimal', 
+      minimumFractionDigits: 0,
+      maximumFractionDigits: 0
+    }).format(amount);
+  } catch (e) {
+    return amount.toLocaleString();
+  }
 }
 
 // ---------------------------------------------------------
@@ -49,9 +58,18 @@ function loadState() {
   const stored = localStorage.getItem(STORAGE_KEY);
   if (stored) {
     try {
-      state = JSON.parse(stored);
+      const parsed = JSON.parse(stored);
+      state = { ...state, ...parsed }; // Merge to ensure new keys exist
     } catch (e) {
       console.error('Failed to parse storage', e);
+    }
+  } else {
+    // First time load: Try to auto-detect currency
+    try {
+      const detected = new Intl.NumberFormat().resolvedOptions().currency;
+      if (detected) state.currency = detected;
+    } catch (e) {
+      console.log('Could not detect currency');
     }
   }
 }
@@ -101,6 +119,8 @@ const elDaysCompleted = document.getElementById('days-completed');
 const elMonthTitle = document.getElementById('month-title');
 const elCalendarBody = document.getElementById('calendar-body');
 const elToast = document.getElementById('toast');
+const elCurrencyLabel = document.getElementById('currency-label');
+const elCurrencySelect = document.getElementById('currency-select');
 
 function showToast(msg) {
   elToast.textContent = msg;
@@ -112,6 +132,10 @@ function renderHeader() {
   const { due, missingDays } = calculateDue();
   const totalSaved = getTotalSaved();
   
+  // Update Currency UI
+  elCurrencyLabel.textContent = state.currency;
+  elCurrencySelect.value = state.currency;
+
   elTotalSaved.textContent = formatMoney(totalSaved);
   elDaysCompleted.textContent = `${state.savedDays.length}/365`;
 
@@ -236,6 +260,12 @@ function markAllDueAsSaved() {
 
 elBtnPay.addEventListener('click', markAllDueAsSaved);
 
+// Currency Change
+elCurrencySelect.addEventListener('change', (e) => {
+  state.currency = e.target.value;
+  saveState();
+});
+
 document.getElementById('prev-month').addEventListener('click', () => {
   viewMonth--;
   if(viewMonth < 0) {
@@ -263,6 +293,38 @@ document.getElementById('btn-export').addEventListener('click', () => {
   document.body.appendChild(downloadAnchorNode);
   downloadAnchorNode.click();
   downloadAnchorNode.remove();
+});
+
+// Import Data
+const elFileImport = document.getElementById('file-import');
+document.getElementById('btn-import').addEventListener('click', () => {
+  elFileImport.click();
+});
+
+elFileImport.addEventListener('change', (e) => {
+  const file = e.target.files[0];
+  if (!file) return;
+
+  const reader = new FileReader();
+  reader.onload = (event) => {
+    try {
+      const importedState = JSON.parse(event.target.result);
+      if (importedState && Array.isArray(importedState.savedDays)) {
+        state = importedState;
+        saveState(); // Save to local storage
+        updateUI();  // Refresh UI
+        showToast('Data imported successfully!');
+      } else {
+        alert('Invalid data file format.');
+      }
+    } catch (err) {
+      console.error(err);
+      alert('Error reading data file.');
+    }
+    // Reset input so same file can be selected again if needed
+    elFileImport.value = '';
+  };
+  reader.readAsText(file);
 });
 
 // Calendar Reminder (ICS)

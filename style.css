@@ -278,9 +278,33 @@ footer {
   transition: color 0.2s;
 }
 
-.link-btn:hover {
-  color: var(--text);
+select.link-btn {
+  appearance: none;
+  -webkit-appearance: none;
+  background-color: transparent;
+  padding-right: 0.5rem;
+  font-family: inherit;
+  outline: none;
+  color: var(--text-muted);
+  cursor: pointer;
+  border: none;
+  font-weight: 600;
+  font-size: 0.85rem;
 }
+
+/* Force colors on the dropdown menu items */
+select.link-btn option {
+  background-color: #111111; /* Cream */
+  color: #111111; /* Black */
+}
+
+@media (prefers-color-scheme: dark) {
+  select.link-btn option {
+    background-color: #111111; /* Black */
+    color: #e7e3dd; /* Cream */
+  }
+}
+
 
 /* Toast */
 .toast {
